@@ -12,12 +12,12 @@ import java.util.Properties;
  * Use the following public website for your automation task:
  * <br/> <a href="https://www.saucedemo.com/">https://www.saucedemo.com/</a>
  */
-public class SeleniumTests {
+public class EndavaSeleniumTests {
 
-    private static final Logger logger = LoggerFactory.getLogger(SeleniumTests.class.getSimpleName());
+    private static final Logger logger = LoggerFactory.getLogger(EndavaSeleniumTests.class.getSimpleName());
     private final Properties props = new Properties();
 
-    SeleniumTests() {
+    EndavaSeleniumTests() {
         loadProperties();
     }
 
