@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 
 public class Misc {
 
-    private final Logger logger = LoggerFactory.getLogger(Misc.class.getSimpleName());
-
+    private static final Logger logger = LoggerFactory.getLogger(Misc.class.getSimpleName());
 
     public static void sleepSeconds(final int sleepTimeSeconds) {
+        logger.info("Sleeping for '{}' seconds...", sleepTimeSeconds);
         try {
             Thread.sleep(sleepTimeSeconds * 1000L);
         } catch (InterruptedException e) {

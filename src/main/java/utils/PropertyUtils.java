@@ -31,10 +31,11 @@ public class PropertyUtils {
         }
     }
 
-    public static void putAllProjectPropsIntoSystem() {
+    public static void copyPropsIntoSystemAndViceVersa() {
         Properties systemProps = System.getProperties();
         systemProps.putAll(props);
         System.setProperties(systemProps);
+        props.putAll(systemProps);
     }
 
     public static void loadPropertyFile(final String propertyFilePath) {
@@ -51,6 +52,7 @@ public class PropertyUtils {
      * @return Property value if such key is found. Empty string ("") otherwise.
      */
     public static String getProperty(final String propertyKey) {
+        logger.info("Getting property with key '{}'", propertyKey);
         String propertyValue = props.getProperty(propertyKey.trim());
         return propertyValue == null ? "" : propertyValue;
     }
@@ -62,6 +64,7 @@ public class PropertyUtils {
      * @return the found prop value or default
      */
     public static String getProperty(final String propertyKey, final String defaultValue) {
+        logger.info("Getting property with key '{}' OR default to '{}' if not found", propertyKey, defaultValue);
         final String prop = getProperty(propertyKey);
         return prop.isEmpty() ? defaultValue : prop;
     }
