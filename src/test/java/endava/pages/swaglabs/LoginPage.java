@@ -1,4 +1,4 @@
-package endava.pages;
+package endava.pages.swaglabs;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -12,7 +12,7 @@ import static ui.Browser.getUrl;
 /**
  * Page object to represent <a href="https://www.saucedemo.com/">www.saucedemo.com</a> login page
  */
-public class SwagLabsLoginPageObject {
+public class LoginPage {
     @FindBy(id = "user-name")
     WebElement usernameInput;
     @FindBy(id = "password")
@@ -20,9 +20,9 @@ public class SwagLabsLoginPageObject {
     @FindBy(id = "login-button")
     WebElement loginButton;
     public static final String PAGE_URL = "https://www.saucedemo.com/";
-    private static final Logger logger = LoggerFactory.getLogger(SwagLabsLoginPageObject.class.getSimpleName());
+    private static final Logger logger = LoggerFactory.getLogger(LoginPage.class.getSimpleName());
 
-    public SwagLabsLoginPageObject() {
+    public LoginPage() {
         logger.info("Initializing {} page", PAGE_URL);
         PageFactory.initElements(drv, this);
     }

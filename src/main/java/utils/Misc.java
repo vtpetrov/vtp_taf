@@ -29,6 +29,7 @@ public class Misc {
      *
      * @param actualCollection the Collection that is expected for an element if present
      * @param indexAt          the position at which is the searched element
+     * @return the item found or null if elem not found
      */
     public static <T> T getElementSafe(final Collection<T> actualCollection, final int indexAt) {
         ArrayList<T> actualCollectionOfElements = new ArrayList<>(actualCollection);
