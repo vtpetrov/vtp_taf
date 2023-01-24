@@ -48,11 +48,10 @@ public class LoginPage {
      * @return true if this is the opened page, false otherwise
      */
     public boolean isAt() {
-        logger.info("Checking if we are currently on the SwagLabsLoginPage");
+        logger.info("Checking if we are currently on the LoginPage");
         return PAGE_URL.equalsIgnoreCase(getUrl())
                 && usernameInput != null
                 && passwordInput != null
                 && loginButton != null;
     }
-
 }

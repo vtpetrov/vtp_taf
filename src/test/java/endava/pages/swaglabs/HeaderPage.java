@@ -8,6 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ui.SeleniumHelpers;
 import utils.Misc;
 
 import java.util.List;
@@ -30,6 +31,10 @@ public class HeaderPage {
     private static final Logger logger = LoggerFactory.getLogger(HeaderPage.class.getSimpleName());
 
     public HeaderPage() {
+        init();
+    }
+
+    private void init() {
         logger.info("Initializing HEADER object");
         PageFactory.initElements(drv, this);
     }
@@ -39,11 +44,15 @@ public class HeaderPage {
      * @return the value found or 0 by default
      */
     public int getShoppingCartBadgeValue() {
+        this.init();
         int returnVal = 0;
         List<WebElement> shoppingCartBadge = shoppingCartElem.findElements(By.className("shopping_cart_badge"));
         WebElement badge = Misc.getElementSafe(shoppingCartBadge, 0);
         if(badge != null) {
-            returnVal = Integer.parseInt(badge.getText());
+            try {
+                returnVal = Integer.parseInt(badge.getText());
+            } catch (NumberFormatException ignored) {
+            }
         }
 
         return returnVal;
@@ -53,18 +62,30 @@ public class HeaderPage {
      * This action navigates to the Shopping Cart
      */
     public void clickShoppingCartIcon() {
-        if(shoppingCartLink.isDisplayed() && shoppingCartLink.isEnabled()) {
-            shoppingCartLink.click();
-        } else {
-            Assertions.fail("Shopping cart link not clickable!");
-        }
+        this.init();
+        SeleniumHelpers.clickWebElemSafelyOrFail(shoppingCartLink);
     }
 
+    /**
+     * Naming alias overload for the method ({@link HeaderPage#clickShoppingCartIcon()})
+     */
+    public void goToShoppingCart() {
+        clickShoppingCartIcon();
+    }
     public void clickHamburgerMenu() {
-        if(burgerMenuBtn.isDisplayed() && burgerMenuBtn.isEnabled()) {
-            burgerMenuBtn.click();
-        } else {
-            Assertions.fail("Hamburger menu not clickable!");
-        }
+        this.init();
+        SeleniumHelpers.clickWebElemSafelyOrFail(burgerMenuBtn);
+    }
+
+    /**
+     * Asserts the count of items added to the cart and visible/displayed on the cart badge in the Header
+     * @param expectedValue the expected number of items (count)
+     */
+    public void assertShoppingCartBadgeValue(int expectedValue) {
+        this.init();
+        // verify Cart icon top-right has number X on it:
+        int actualShoppingCartBadgeValue = this.getShoppingCartBadgeValue();
+        Assertions.assertEquals(expectedValue, actualShoppingCartBadgeValue,"Actual badge count doesn't match expected!");
+
     }
 }

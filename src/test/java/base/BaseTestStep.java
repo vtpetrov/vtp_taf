@@ -14,10 +14,6 @@ public class BaseTestStep {
     public static Properties testProps = new Properties();
     private static final Logger logger = LoggerFactory.getLogger(BaseTestStep.class.getSimpleName());
 
-//    public BaseTestStep() {
-//
-//    }
-
     private static void initBaseTest() {
         logger.info("Initializing BaseTestStep. Calling default constructor to load property files");
         PropertyUtils.loadAllConfigs();

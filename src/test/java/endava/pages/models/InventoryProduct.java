@@ -6,6 +6,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ui.SeleniumHelpers;
 
 @Data
 public class InventoryProduct {
@@ -36,7 +37,9 @@ public class InventoryProduct {
     }
 
     public InventoryProduct(WebElement productWebElem) {
+        //TODO тука ги принти имената като хората. да видя мога ли да ги взема някак правилно
         logger.info("Constructing a InventoryProduct out of [{}]", productWebElem.getText());
+
         PageFactory.initElements(productWebElem, this);
 
         this.name = this.productName.getText();
@@ -53,7 +56,7 @@ public class InventoryProduct {
     }
 
     public void clickAddToCart() {
-        this.productAddToCartBtn.click();
+        SeleniumHelpers.clickWebElemSafelyOrFail(productAddToCartBtn);
     }
 
 }

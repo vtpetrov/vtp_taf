@@ -6,6 +6,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ui.SeleniumHelpers;
 
 @Data
 public class CartProduct {
@@ -47,7 +48,7 @@ public class CartProduct {
     }
 
     public void clickRemoveButton() {
-        this.itemRemoveBtn.click();
+        SeleniumHelpers.clickWebElemSafelyOrFail(itemRemoveBtn);
     }
 
 }

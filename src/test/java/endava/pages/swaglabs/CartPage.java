@@ -9,12 +9,14 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ui.SeleniumHelpers;
 import utils.Misc;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static ui.Browser.drv;
+import static ui.Browser.getUrl;
 
 /**
  * Page object to represent <a href="https://www.saucedemo.com/cart.html">www.saucedemo.com/cart.html</a> page
@@ -24,21 +26,32 @@ public class CartPage extends HeaderPage {
     @FindBy(id = "cart_contents_container")
     private WebElement cartContentContainer;
 
-    List<CartProduct> products = new ArrayList<>();
-    private final List<WebElement> cartItems;
+    @FindBy(id = "continue-shopping")
+    private WebElement continueShoppingBtn; // back to Products (inventory) page
+
+    @FindBy(id = "checkout")
+    private WebElement checkoutBtn;
+
+    private List<CartProduct> products = new ArrayList<>();
+    private List<WebElement> cartItems;
 
     public static final String PAGE_URL = "https://www.saucedemo.com/cart.html";
     private static final Logger logger = LoggerFactory.getLogger(CartPage.class.getSimpleName());
 
     public CartPage() {
         super();
+        init();
+    }
+
+    private void init() {
         logger.info("Initializing {} page", PAGE_URL);
         PageFactory.initElements(drv, this);
 
-        cartItems = cartContentContainer.findElements(By.className("cart_item"));
-        for (WebElement itemWebElement : cartItems) {
+        this.cartItems = this.cartContentContainer.findElements(By.className("cart_item"));
+        this.products.clear();
+        for (WebElement itemWebElement : this.cartItems) {
             CartProduct product = new CartProduct(itemWebElement);
-            products.add(product);
+            this.products.add(product);
         }
     }
 
@@ -46,7 +59,8 @@ public class CartPage extends HeaderPage {
      * Remove item from the Cart (click it's 'REMOVE' button)
      * @param index the index of the item (zero based)
      */
-    public void removeItemFromCart(int index) {
+    public CartProduct removeItemFromCart(int index) {
+        this.init();
         CartProduct itemToRemove = Misc.getElementSafe(products, index);
 
         if(itemToRemove != null) {
@@ -55,6 +69,41 @@ public class CartPage extends HeaderPage {
             Assertions.fail("Item not found to click it's 'REMOVE' button!");
         }
 
+        return itemToRemove;
     }
 
+    public void clickContinueShoppingBtn() {
+        this.init();
+        SeleniumHelpers.clickWebElemSafelyOrFail(continueShoppingBtn);
+    }
+
+    public void clickCheckoutBtn() {
+        this.init();
+        SeleniumHelpers.clickWebElemSafelyOrFail(checkoutBtn);
+    }
+
+    /**
+     * Assess if browser currently open page is this one or not
+     *
+     * @return true if this is the opened page, false otherwise
+     */
+    public boolean isAt() {
+        init();
+        logger.info("Checking if we are currently on the CartPage");
+        return PAGE_URL.equalsIgnoreCase(getUrl())
+                && this.cartContentContainer != null
+                && !this.cartItems.isEmpty()
+                && this.checkoutBtn != null
+                && this.continueShoppingBtn != null;
+    }
+
+    /**
+     * Get product from the cart and return the instance of java object of type {@link CartProduct}
+     * @param productIndex index of the product to get
+     * @return the product itself or null if not found
+     */
+    public CartProduct getProduct(int productIndex) {
+        this.init();
+        return Misc.getElementSafe(products, productIndex);
+    }
 }
