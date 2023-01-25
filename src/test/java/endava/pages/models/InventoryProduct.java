@@ -38,7 +38,7 @@ public class InventoryProduct {
 
     public InventoryProduct(WebElement productWebElem) {
         //TODO тука ги принти имената като хората. да видя мога ли да ги взема някак правилно
-        logger.info("Constructing a InventoryProduct out of [{}]", productWebElem.getText());
+//        logger.info("Constructing a InventoryProduct out of [{}]", productWebElem.getText());
 
         PageFactory.initElements(productWebElem, this);
 
@@ -56,7 +56,7 @@ public class InventoryProduct {
     }
 
     public void clickAddToCart() {
-        SeleniumHelpers.clickWebElemSafelyOrFail(productAddToCartBtn);
+        SeleniumHelpers.clickWebElemSafelyOrFail(SeleniumHelpers.waitUntilClickable(4, productAddToCartBtn));
     }
 
 }

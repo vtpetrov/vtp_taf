@@ -38,7 +38,7 @@ public class CartProduct {
     }
 
     public CartProduct(WebElement productWebElem) {
-        logger.info("Constructing a CartProduct out of [{}]", productWebElem.getText());
+//        logger.info("Constructing a CartProduct out of [{}]", productWebElem.getText());
         PageFactory.initElements(productWebElem, this);
 
         this.quantity = Integer.parseInt(this.itemQuantity.getText());
@@ -48,7 +48,7 @@ public class CartProduct {
     }
 
     public void clickRemoveButton() {
-        SeleniumHelpers.clickWebElemSafelyOrFail(itemRemoveBtn);
+        SeleniumHelpers.clickWebElemSafelyOrFail(SeleniumHelpers.waitUntilClickable(4, itemRemoveBtn));
     }
 
 }

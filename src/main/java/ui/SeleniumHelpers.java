@@ -2,10 +2,15 @@ package ui;
 
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.Optional;
+
+import static ui.Browser.drv;
 
 public class SeleniumHelpers {
 
@@ -31,5 +36,10 @@ public class SeleniumHelpers {
                     , Optional.ofNullable(elemToClick).map(WebElement::getText).orElse(""));
             Assertions.fail("Element not clickable!");
         }
+    }
+
+    public static WebElement waitUntilClickable(int maxSecondsToWait, WebElement theElementToBeClickable) {
+        return new WebDriverWait(drv, Duration.ofSeconds(maxSecondsToWait))
+                .until(ExpectedConditions.elementToBeClickable(theElementToBeClickable));
     }
 }

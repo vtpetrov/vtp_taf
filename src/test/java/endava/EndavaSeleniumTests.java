@@ -2,15 +2,13 @@ package endava;
 
 import base.BaseTestStep;
 import endava.pages.models.CartProduct;
+import endava.pages.models.HamburgerMenu;
 import endava.pages.models.InventoryProduct;
-import endava.pages.swaglabs.CartPage;
-import endava.pages.swaglabs.InventoryPage;
-import endava.pages.swaglabs.LoginPage;
+import endava.pages.swaglabs.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.Misc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,20 +37,22 @@ public class EndavaSeleniumTests extends BaseTestStep {
 
     @Test
     public void scenarioOne() {
+        logger.info("Scenario 1 Start!");
         String scenarioDescr = """
-                - Log in with the standard user
-                - Add the first and the last item in the cart, verify the correct items are added
-                - Remove the first item and add previous to the last item to the cart, verify the content again
-                - Go to checkout
-                - Finish the order
-                - Verify order is placed
-                - Verify cart is empty
-                - Logout from the system
+                1. Log in with the standard user
+                2. Add the first and the last item in the cart, verify the correct items are added
+                3. Remove the first item and add previous to the last item to the cart, verify the content again
+                4. Go to checkout
+                5. Finish the order
+                6. Verify order is placed
+                7. Verify cart is empty
+                8. Logout from the system
                 """;
         logger.info("Executing Scenario 1: \n{}", scenarioDescr);
 
         goTo(UI_BASE_URL); // navigate to the login page
-        logger.info("Log in with the standard user....");
+// 1. Log in with the standard user
+        logger.info("1. Log in with the standard user .");
         LoginPage loginPage = new LoginPage(); // initialize login page via PageFactory
         Assertions.assertTrue(loginPage.isAt()); // assert if login page is opened
 
@@ -63,8 +63,8 @@ public class EndavaSeleniumTests extends BaseTestStep {
         InventoryPage inventoryPage = new InventoryPage();
         Assertions.assertTrue(inventoryPage.isAt()); // assert if inventory page is opened
 
-//- Add the first and the last item in the cart, verify the correct items are added
-        logger.info("- Add the first and the last item in the cart, verify the correct items are added...");
+//2. Add the first and the last item in the cart, verify the correct items are added
+        logger.info("2. Add the first and the last item in the cart, verify the correct items are added ..");
         List<InventoryProduct> expectedCartContent = new ArrayList<>();
         InventoryProduct firstProduct = inventoryPage.addProductToCart(0);
         InventoryProduct lastProduct = inventoryPage.addProductToCart(inventoryPage.getProducts().size() - 1);
@@ -95,7 +95,8 @@ public class EndavaSeleniumTests extends BaseTestStep {
                     , actualProduct.getPrice(), "Actual price doesn't match Expected!");
         }
 
-//- Remove the first item and add previous to the last item to the cart, verify the content again:
+//3. Remove the first item and add previous to the last item to the cart, verify the content again
+        logger.info("3. Remove the first item and add previous to the last item to the cart, verify the content again ...");
         cartPage.removeItemFromCart(0);
         expectedCartContent.remove(0);
         // assert shopping cart badge value is 1 now:
@@ -122,10 +123,53 @@ public class EndavaSeleniumTests extends BaseTestStep {
                     , actualProduct.getPrice(), "Actual price doesn't match Expected!");
         }
 
+// 4. Go to checkout
+        logger.info("4. Go to checkout ....");
+        cartPage.goToCheckout();
+        CheckOutPage checkOutPage = new CheckOutPage();
+        Assertions.assertTrue(checkOutPage.isAt()); // assert if checkout page is opened
 
-        Misc.sleepSeconds(2);
-        logger.info("end");
+// 5. Finish the order - proceed to order OVERVIEW page (assert info) and then FINISH
+        logger.info("5. Finish the order .....");
+        // enter data on checkout:
+        checkOutPage.enterFirstName("Veselin");
+        checkOutPage.enterLastName("Petrov");
+        checkOutPage.enterZipPostCode("2050");
+        checkOutPage.clickContinueBtn();
+        // verify data on checkout overview page:
+        CheckoutOverviewPage checkoutOverviewPage = new CheckoutOverviewPage();
+        Assertions.assertTrue(checkoutOverviewPage.isAt()); // assert if checkout overview page is opened
 
+        // click FINISH:
+        checkoutOverviewPage.clickFinishBtn(); // navigate to checkout complete page
+
+
+// 6. Verify order is placed
+//        checkout complete page shows just greeting message! I'm going to assert it.
+        logger.info("6. Verify order is placed ......");
+        CheckoutCompletePage checkoutCompletePage = new CheckoutCompletePage();
+        Assertions.assertTrue(checkoutCompletePage.isAt()); // assert if checkout complete page is opened
+        checkoutCompletePage.assertCompleteHeader();
+        checkoutCompletePage.assertCompleteText();
+
+
+// 7. Verify cart is empty
+        logger.info("7. Verify cart is empty .......");
+        HeaderPage headerPage = new HeaderPage();
+        headerPage.assertShoppingCartBadgeValue(0);
+        headerPage.goToShoppingCart();
+        cartPage.assertProductsCount(0);
+
+// 8. Logout from the system
+        logger.info("8. Logout from the system ........");
+        headerPage.clickHamburgerMenu();
+        HamburgerMenu hamburgerMenu = new HamburgerMenu();
+        hamburgerMenu.clickLogoutLink();
+
+        // assert we are at login page now:
+        Assertions.assertTrue(loginPage.isAt()); // assert if login page is opened
+
+        logger.info("Scenario 1 End!");
     }
 
 

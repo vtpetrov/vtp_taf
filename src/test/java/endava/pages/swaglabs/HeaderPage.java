@@ -1,5 +1,6 @@
 package endava.pages.swaglabs;
 
+import endava.pages.models.HamburgerMenu;
 import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
@@ -16,10 +17,13 @@ import java.util.List;
 import static ui.Browser.drv;
 
 /**
- * Page object to represent the HEADER on all pages -> hamburger menu, swag labs logo, cart icon
+ * Page object to represent the HEADER on all pages -> hamburger menu, swag labs logo, cart icon, title
  */
 @Data
 public class HeaderPage {
+    @FindBy(className = "title")
+    protected WebElement title;
+
     @FindBy(id = "react-burger-menu-btn")
     protected WebElement burgerMenuBtn;
 
@@ -35,7 +39,7 @@ public class HeaderPage {
     }
 
     private void init() {
-        logger.info("Initializing HEADER object");
+//        logger.info("Initializing HEADER object");
         PageFactory.initElements(drv, this);
     }
 
@@ -63,7 +67,8 @@ public class HeaderPage {
      */
     public void clickShoppingCartIcon() {
         this.init();
-        SeleniumHelpers.clickWebElemSafelyOrFail(shoppingCartLink);
+        logger.info("Navigating to shopping cart...");
+        SeleniumHelpers.clickWebElemSafelyOrFail(SeleniumHelpers.waitUntilClickable(4, shoppingCartLink));
     }
 
     /**
@@ -72,9 +77,11 @@ public class HeaderPage {
     public void goToShoppingCart() {
         clickShoppingCartIcon();
     }
-    public void clickHamburgerMenu() {
+    public HamburgerMenu clickHamburgerMenu() {
         this.init();
-        SeleniumHelpers.clickWebElemSafelyOrFail(burgerMenuBtn);
+        SeleniumHelpers.clickWebElemSafelyOrFail(SeleniumHelpers.waitUntilClickable(4, burgerMenuBtn));
+        HamburgerMenu hamburgerMenu = new HamburgerMenu();
+        return hamburgerMenu;
     }
 
     /**
@@ -83,9 +90,18 @@ public class HeaderPage {
      */
     public void assertShoppingCartBadgeValue(int expectedValue) {
         this.init();
+        logger.info("Asserting cart icon badge shows a certain count => {}", expectedValue);
         // verify Cart icon top-right has number X on it:
         int actualShoppingCartBadgeValue = this.getShoppingCartBadgeValue();
         Assertions.assertEquals(expectedValue, actualShoppingCartBadgeValue,"Actual badge count doesn't match expected!");
 
+    }
+
+    protected String getTitle() {
+        if (this.title != null) {
+            return this.title.getText();
+        } else {
+            return "";
+        }
     }
 }

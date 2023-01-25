@@ -23,7 +23,11 @@ public class LoginPage {
     private static final Logger logger = LoggerFactory.getLogger(LoginPage.class.getSimpleName());
 
     public LoginPage() {
-        logger.info("Initializing {} page", PAGE_URL);
+        init();
+    }
+
+    private void init() {
+//        logger.info("Initializing {} page", PAGE_URL);
         PageFactory.initElements(drv, this);
     }
 
@@ -48,6 +52,7 @@ public class LoginPage {
      * @return true if this is the opened page, false otherwise
      */
     public boolean isAt() {
+        init();
         logger.info("Checking if we are currently on the LoginPage");
         return PAGE_URL.equalsIgnoreCase(getUrl())
                 && usernameInput != null

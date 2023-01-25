@@ -32,6 +32,7 @@ public class InventoryPage extends HeaderPage {
     private List<WebElement> inventoryItems;
     Select sortingMenu;
     public final String PAGE_URL = "https://www.saucedemo.com/inventory.html";
+    public static final String PAGE_TITLE = "Products";
     private static final Logger logger = LoggerFactory.getLogger(InventoryPage.class.getSimpleName());
 
     public InventoryPage() {
@@ -40,7 +41,7 @@ public class InventoryPage extends HeaderPage {
     }
 
     private void init() {
-        logger.info("Initializing {} page", PAGE_URL);
+//        logger.info("Initializing {} page", PAGE_URL);
         PageFactory.initElements(drv, this);
 
         this.sortingMenu = new Select(this.sortingSelectElement);
@@ -61,6 +62,7 @@ public class InventoryPage extends HeaderPage {
      */
     public InventoryProduct addProductToCart(int productIndex) {
         this.init();
+        logger.info("Adding product {} to cart", productIndex + 1);
         InventoryProduct itemToAdd = Misc.getElementSafe(products, productIndex);
 
         if (itemToAdd != null) {
@@ -81,6 +83,7 @@ public class InventoryPage extends HeaderPage {
         init();
         logger.info("Checking if we are currently on the InventoryPage");
         return this.PAGE_URL.equalsIgnoreCase(getUrl())
+                && this.getTitle().equalsIgnoreCase(InventoryPage.PAGE_TITLE)
                 && this.productsContainer != null
                 && !this.inventoryItems.isEmpty()
                 && this.sortingSelectElement != null;

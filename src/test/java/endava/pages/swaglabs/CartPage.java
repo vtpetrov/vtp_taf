@@ -36,6 +36,7 @@ public class CartPage extends HeaderPage {
     private List<WebElement> cartItems;
 
     public static final String PAGE_URL = "https://www.saucedemo.com/cart.html";
+    public static final String PAGE_TITLE = "Your Cart";
     private static final Logger logger = LoggerFactory.getLogger(CartPage.class.getSimpleName());
 
     public CartPage() {
@@ -44,7 +45,7 @@ public class CartPage extends HeaderPage {
     }
 
     private void init() {
-        logger.info("Initializing {} page", PAGE_URL);
+//        logger.info("Initializing {} page", PAGE_URL);
         PageFactory.initElements(drv, this);
 
         this.cartItems = this.cartContentContainer.findElements(By.className("cart_item"));
@@ -61,6 +62,7 @@ public class CartPage extends HeaderPage {
      */
     public CartProduct removeItemFromCart(int index) {
         this.init();
+        logger.info("removing item {} from cart", index + 1);
         CartProduct itemToRemove = Misc.getElementSafe(products, index);
 
         if(itemToRemove != null) {
@@ -74,12 +76,21 @@ public class CartPage extends HeaderPage {
 
     public void clickContinueShoppingBtn() {
         this.init();
-        SeleniumHelpers.clickWebElemSafelyOrFail(continueShoppingBtn);
+        logger.info("Clicking 'continue shopping' button to go back to Products page");
+        SeleniumHelpers.clickWebElemSafelyOrFail(SeleniumHelpers.waitUntilClickable(4, continueShoppingBtn));
     }
 
     public void clickCheckoutBtn() {
         this.init();
-        SeleniumHelpers.clickWebElemSafelyOrFail(checkoutBtn);
+        logger.info("Going to checkout...");
+        SeleniumHelpers.clickWebElemSafelyOrFail(SeleniumHelpers.waitUntilClickable(4, checkoutBtn));
+    }
+
+    /**
+     * Naming alias overload for the method ({@link CartPage#clickCheckoutBtn()})
+     */
+    public void goToCheckout() {
+        clickCheckoutBtn();
     }
 
     /**
@@ -91,6 +102,7 @@ public class CartPage extends HeaderPage {
         init();
         logger.info("Checking if we are currently on the CartPage");
         return PAGE_URL.equalsIgnoreCase(getUrl())
+                && this.getTitle().equalsIgnoreCase(CartPage.PAGE_TITLE)
                 && this.cartContentContainer != null
                 && !this.cartItems.isEmpty()
                 && this.checkoutBtn != null
@@ -105,5 +117,10 @@ public class CartPage extends HeaderPage {
     public CartProduct getProduct(int productIndex) {
         this.init();
         return Misc.getElementSafe(products, productIndex);
+    }
+
+    public void assertProductsCount(int expectedCount) {
+        init();
+        Assertions.assertEquals(expectedCount, products.size(), "Actual products count in Cart doesn't match expected!");
     }
 }
