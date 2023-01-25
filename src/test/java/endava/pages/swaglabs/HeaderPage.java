@@ -1,7 +1,7 @@
 package endava.pages.swaglabs;
 
+import base.BasePageObject;
 import endava.pages.models.HamburgerMenu;
-import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -19,8 +19,8 @@ import static ui.Browser.drv;
 /**
  * Page object to represent the HEADER on all pages -> hamburger menu, swag labs logo, cart icon, title
  */
-@Data
-public class HeaderPage {
+//@Data
+public class HeaderPage extends BasePageObject {
     @FindBy(className = "title")
     protected WebElement title;
 
@@ -35,6 +35,7 @@ public class HeaderPage {
     private static final Logger logger = LoggerFactory.getLogger(HeaderPage.class.getSimpleName());
 
     public HeaderPage() {
+        super();
         init();
     }
 

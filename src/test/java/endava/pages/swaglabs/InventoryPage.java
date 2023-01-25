@@ -1,7 +1,7 @@
 package endava.pages.swaglabs;
 
 import endava.pages.models.InventoryProduct;
-import lombok.Data;
+import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -21,15 +21,16 @@ import static ui.Browser.getUrl;
 /**
  * Page object to represent <a href="https://www.saucedemo.com/inventory.html">www.saucedemo.com/inventory.html</a> page
  */
-@Data
+//@Data
 public class InventoryPage extends HeaderPage {
     @FindBy(className = "product_sort_container") // DOESN'T WORK!!!
     private WebElement sortingSelectElement;
     @FindBy(id = "inventory_container")
     private WebElement productsContainer;
 
-    private List<InventoryProduct> products = new ArrayList<>();
+    private final List<InventoryProduct> products = new ArrayList<>();
     private List<WebElement> inventoryItems;
+    @Getter
     Select sortingMenu;
     public final String PAGE_URL = "https://www.saucedemo.com/inventory.html";
     public static final String PAGE_TITLE = "Products";
@@ -89,4 +90,8 @@ public class InventoryPage extends HeaderPage {
                 && this.sortingSelectElement != null;
     }
 
+    public List<InventoryProduct> getProducts() {
+        init();
+        return this.products;
+    }
 }

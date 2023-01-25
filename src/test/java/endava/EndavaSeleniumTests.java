@@ -6,11 +6,14 @@ import endava.pages.models.HamburgerMenu;
 import endava.pages.models.InventoryProduct;
 import endava.pages.swaglabs.*;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static ui.Browser.goTo;
@@ -36,29 +39,23 @@ public class EndavaSeleniumTests extends BaseTestStep {
     }
 
     @Test
+    @Tags({@Tag("endava"), @Tag("ui"), @Tag("s1")})
     public void scenarioOne() {
-        logger.info("Scenario 1 Start!");
         String scenarioDescr = """
-                1. Log in with the standard user
-                2. Add the first and the last item in the cart, verify the correct items are added
-                3. Remove the first item and add previous to the last item to the cart, verify the content again
-                4. Go to checkout
-                5. Finish the order
-                6. Verify order is placed
-                7. Verify cart is empty
-                8. Logout from the system
+                Scenario 1
+                    1. Log in with the standard user
+                    2. Add the first and the last item in the cart, verify the correct items are added
+                    3. Remove the first item and add previous to the last item to the cart, verify the content again
+                    4. Go to checkout
+                    5. Finish the order
+                    6. Verify order is placed
+                    7. Verify cart is empty
+                    8. Logout from the system
                 """;
-        logger.info("Executing Scenario 1: \n{}", scenarioDescr);
-
-        goTo(UI_BASE_URL); // navigate to the login page
+        logger.info("Scenario 1, description: \n{}", scenarioDescr);
 // 1. Log in with the standard user
         logger.info("1. Log in with the standard user .");
-        LoginPage loginPage = new LoginPage(); // initialize login page via PageFactory
-        Assertions.assertTrue(loginPage.isAt()); // assert if login page is opened
-
-        loginPage.enterUsername(STD_USER);
-        loginPage.enterPassword(STD_PASS);
-        loginPage.clickLoginButton();
+        loginWithStandardUser();
 
         InventoryPage inventoryPage = new InventoryPage();
         Assertions.assertTrue(inventoryPage.isAt()); // assert if inventory page is opened
@@ -82,7 +79,7 @@ public class EndavaSeleniumTests extends BaseTestStep {
         // verify cart content
         // Compare expected vs. actual items: quantity, description, and price
         logger.info("Asserting cart content 1");
-        for(int c = 0; c < 2; c++) {
+        for (int c = 0; c < 2; c++) {
             InventoryProduct expectedProduct = expectedCartContent.get(c);
             CartProduct actualProduct = cartPage.getProduct(c);
 
@@ -110,7 +107,7 @@ public class EndavaSeleniumTests extends BaseTestStep {
         inventoryPage.goToShoppingCart();
         // Compare expected vs. actual items: quantity, description, and price
         logger.info("Asserting cart content 2");
-        for(int c = 0; c < 2; c++) {
+        for (int c = 0; c < 2; c++) {
             InventoryProduct expectedProduct = expectedCartContent.get(c);
             CartProduct actualProduct = cartPage.getProduct(c);
 
@@ -167,10 +164,65 @@ public class EndavaSeleniumTests extends BaseTestStep {
         hamburgerMenu.clickLogoutLink();
 
         // assert we are at login page now:
-        Assertions.assertTrue(loginPage.isAt()); // assert if login page is opened
+        Assertions.assertTrue(new LoginPage().isAt()); // assert if login page is opened
+
 
         logger.info("Scenario 1 End!");
     }
 
 
+    @Test
+    @Tags({@Tag("endava"), @Tag("ui"), @Tag("s2")})
+    public void scenarioTwo() {
+        String scenarioDescr = """
+                Scenario 2
+                    1. Log in with the standard user
+                    2. Verify when for sorting it is selected "Price (high to low)"
+                    3. Then the items are sorted in the correct manner
+                    4. Logout from the system
+                """;
+
+        logger.info("Scenario 2, description: \n{}", scenarioDescr);
+
+// 1. Log in with the standard user
+        logger.info("1. Log in with the standard user .");
+        loginWithStandardUser();
+
+        InventoryPage inventoryPage = new InventoryPage();
+        Assertions.assertTrue(inventoryPage.isAt()); // assert if inventory page is opened
+
+        List<Double> expectedPrices = new ArrayList<>(inventoryPage.getProducts().stream().map(InventoryProduct::getPrice)
+                .map(price -> Double.valueOf(price.substring(1).replace(',', '.'))).toList());
+
+        expectedPrices.sort(Collections.reverseOrder());
+
+// 2. Verify when for sorting it is selected "Price (high to low)"
+        logger.info("2. Verify when for sorting it is selected \"Price (high to low)\" ..");
+        inventoryPage.getSortingMenu().selectByValue("hilo");
+// 3. Then the items are sorted in the correct manner
+        logger.info("3. Then the items are sorted in the correct manner ...");
+        List<Double> actualPrices = new ArrayList<>(inventoryPage.getProducts().stream().map(InventoryProduct::getPrice)
+                .map(price -> Double.valueOf(price.substring(1).replace(',', '.'))).toList());
+        logger.info("Expected prices => {}", expectedPrices);
+        logger.info("Actual   prices => {}", actualPrices);
+        Assertions.assertEquals(expectedPrices, actualPrices, "Sorting by 'Price high to low' doesn't match expected");
+
+// 4. Logout from the system
+        logger.info("4. Logout from the system ....");
+        inventoryPage.clickHamburgerMenu().clickLogoutLink();
+        // assert we are at login page now:
+        Assertions.assertTrue(new LoginPage().isAt()); // assert if login page is opened
+
+        logger.info("Scenario 2 End!");
+    }
+
+    private static void loginWithStandardUser() {
+        goTo(UI_BASE_URL); // navigate to the login page
+        LoginPage loginPage = new LoginPage(); // initialize login page via PageFactory
+        Assertions.assertTrue(loginPage.isAt()); // assert if login page is opened
+
+        loginPage.enterUsername(STD_USER);
+        loginPage.enterPassword(STD_PASS);
+        loginPage.clickLoginButton();
+    }
 }
