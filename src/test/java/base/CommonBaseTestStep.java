@@ -18,8 +18,8 @@ public class CommonBaseTestStep {
     private static final Logger logger = LoggerFactory.getLogger(CommonBaseTestStep.class.getSimpleName());
     protected TestInfo testInfo;
     protected AssertionHelper assertionHelper = new AssertionHelper();
-
     public final Faker faker = new Faker();
+    public static SharedState share;
 
     public CommonBaseTestStep() {
         logger.info("Invoking [CommonBaseTestStep] default constructor....");
@@ -32,6 +32,8 @@ public class CommonBaseTestStep {
         PropertyUtils.loadAllConfigs();
         PropertyUtils.copyPropsIntoSystemAndViceVersa();
         testProps = PropertyUtils.getAllProperties();
+        share = new SharedState();
+
     }
 
     @BeforeEach

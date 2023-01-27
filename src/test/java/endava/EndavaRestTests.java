@@ -45,18 +45,21 @@ import java.util.stream.Collectors;
  *  6.Parameterize base URL
  * </pre>
  */
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class EndavaRestTests extends ApiBaseTestStep {
 
     private static final Logger logger = LoggerFactory.getLogger(EndavaRestTests.class.getSimpleName());
     public static final String CONTENT_TYPE_JSON = "application/json";
+
     private UserGet extractedUser;
     private final Request currentRequest = new Request();
     private final UsersList grossExpectedUsersPage;
 
-    public static final int RESPONSE_STATUS_200 = 200;
-    public static final int RESPONSE_STATUS_201 = 201;
-    public static final int RESPONSE_STATUS_404 = 404;
-    public static final String NON_EXISTING_USER_RESPONSE = "{}";
+    private static final int RESPONSE_STATUS_200 = 200;
+    private static final int RESPONSE_STATUS_201 = 201;
+    private static final int RESPONSE_STATUS_204 = 204;
+    private static final int RESPONSE_STATUS_404 = 404;
+    private static final String EMPTY_RESPONSE_BODY = "{}";
 
     public EndavaRestTests() {
         logger.info("Invoking [EndavaRestTests] default constructor....");
@@ -66,6 +69,7 @@ public class EndavaRestTests extends ApiBaseTestStep {
     }
 
     @Test
+    @Order(1)
     @Tags({@Tag("endava"), @Tag("api")})
     @DisplayName("Scenario 001")
     public void apiScenarioOne() {
@@ -114,6 +118,7 @@ public class EndavaRestTests extends ApiBaseTestStep {
     }
 
     @Test
+    @Order(2)
     @Tags({@Tag("endava"), @Tag("api")})
     @DisplayName("Scenario 002")
     public void apiScenarioTwo() {
@@ -148,6 +153,7 @@ public class EndavaRestTests extends ApiBaseTestStep {
     }
 
     @Test
+    @Order(3)
     @Tags({@Tag("endava"), @Tag("api")})
     @DisplayName("Scenario 003")
     public void apiScenarioThree() {
@@ -167,12 +173,13 @@ public class EndavaRestTests extends ApiBaseTestStep {
         logger.info("Execute one or many Assertions");
         Assertions.assertEquals(RESPONSE_STATUS_404, userNotFoundResponse.getStatusCode()
                 , "Actual response status code doesn't match expected!");
-        Assertions.assertEquals(NON_EXISTING_USER_RESPONSE, userNotFoundResponse.getBody(),
+        Assertions.assertEquals(EMPTY_RESPONSE_BODY, userNotFoundResponse.getBody(),
                 "Actual response body doesn't match expected");
     }
 
 
     @Test
+    @Order(4)
     @Tags({@Tag("endava"), @Tag("api")})
     @DisplayName("Scenario 004")
     public void apiScenarioFour() {
@@ -194,6 +201,7 @@ public class EndavaRestTests extends ApiBaseTestStep {
         currentRequest.setBody(postUserBody);
         Response createUserResponse = RestClient.post(currentRequest);
         UserCreate actualUser = JsonUtils.getResourceFromResponse(createUserResponse, UserCreate.class);
+        share.dataContainer.put("created_user_id", actualUser.getId());
 
 // *      Execute one or many JSON Response Assertions
         logger.info("*      Execute one or many JSON Response Assertions");
@@ -201,13 +209,41 @@ public class EndavaRestTests extends ApiBaseTestStep {
                 , RESPONSE_STATUS_201, createUserResponse.getStatusCode());
         // validate response schema:
         SchemaValidationSteps.validateResponseAgainstJsonSchema(createUserResponse.getBody()
-        , "/endava/schemas/createUser_schema.json");
+                , "/endava/schemas/createUser_schema.json");
 
         String errMsg = "Actual value doesn't match expected!";
         logger.info("Expected user: {}", expectedUser);
         logger.info("Actual   user: {}", actualUser);
         assertionHelper.assertEquals(errMsg, userName, actualUser.getName());
         assertionHelper.assertEquals(errMsg, userJob, actualUser.getJob());
+
+    }
+
+    @Test
+    @Order(5)
+    @Tags({@Tag("endava"), @Tag("api")})
+    @DisplayName("Scenario 005")
+    public void apiScenarioFive() {
+        share.dataContainer.put("5", "pet");
+        String scenarioDescr = """
+                 5. Delete newly created user
+                 *   DELETE /api/users/{USER_ID}
+                 *   Execute one or many Assertions
+                """;
+        logger.info("Scenario 5, description: \n{}", scenarioDescr);
+        currentRequest.clear();
+        logger.info("Deleting user via DELETE /api/users/{USER_ID}");
+        String idToDelete = String.valueOf(Optional.ofNullable(share.dataContainer.get("created_user_id"))
+                .orElse("null"));
+        currentRequest.setPath("/users/" + idToDelete);
+        Response deleteUserResponse = RestClient.delete(currentRequest);
+
+        logger.info("Execute one or many Assertions");
+        assertionHelper.assertEquals("Actual response status code doesn't match expected!"
+                , RESPONSE_STATUS_204, deleteUserResponse.getStatusCode());
+        assertionHelper.assertEquals("Actual response body doesn't match expected"
+                , EMPTY_RESPONSE_BODY, deleteUserResponse.getBody());
+
 
     }
 
