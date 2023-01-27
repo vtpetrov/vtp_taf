@@ -98,6 +98,12 @@
             <artifactId>assertj-core</artifactId>
             <version>3.24.2</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>0.13</version>
+        </dependency>
 
     </dependencies>
 

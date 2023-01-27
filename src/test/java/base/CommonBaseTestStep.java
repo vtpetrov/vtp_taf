@@ -1,5 +1,6 @@
 package base;
 
+import com.github.javafaker.Faker;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +18,8 @@ public class CommonBaseTestStep {
     private static final Logger logger = LoggerFactory.getLogger(CommonBaseTestStep.class.getSimpleName());
     protected TestInfo testInfo;
     protected AssertionHelper assertionHelper = new AssertionHelper();
+
+    public final Faker faker = new Faker();
 
     public CommonBaseTestStep() {
         logger.info("Invoking [CommonBaseTestStep] default constructor....");
