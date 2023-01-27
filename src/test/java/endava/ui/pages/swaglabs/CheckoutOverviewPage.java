@@ -1,6 +1,6 @@
-package endava.pages.swaglabs;
+package endava.ui.pages.swaglabs;
 
-import endava.pages.models.CartProduct;
+import endava.ui.pages.models.CartProduct;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;

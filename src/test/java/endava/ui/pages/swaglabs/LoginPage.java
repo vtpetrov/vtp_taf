@@ -1,4 +1,4 @@
-package endava.pages.swaglabs;
+package endava.ui.pages.swaglabs;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;

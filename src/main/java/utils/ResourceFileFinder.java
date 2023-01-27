@@ -17,7 +17,7 @@ public class ResourceFileFinder {
 
     private static final Logger logger = LoggerFactory.getLogger(ResourceFileFinder.class.getSimpleName());
 
-    protected static final String fs = File.separator;
+    public static final String fs = File.separator;
     private static final String workingDir = System.getProperty("user.dir");
 //    private static final String basePath = getBasePath();
 

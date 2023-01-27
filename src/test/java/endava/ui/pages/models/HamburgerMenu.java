@@ -1,4 +1,4 @@
-package endava.pages.models;
+package endava.ui.pages.models;
 
 import lombok.Data;
 import org.openqa.selenium.WebElement;

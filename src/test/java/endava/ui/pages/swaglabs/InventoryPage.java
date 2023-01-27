@@ -1,6 +1,6 @@
-package endava.pages.swaglabs;
+package endava.ui.pages.swaglabs;
 
-import endava.pages.models.InventoryProduct;
+import endava.ui.pages.models.InventoryProduct;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;

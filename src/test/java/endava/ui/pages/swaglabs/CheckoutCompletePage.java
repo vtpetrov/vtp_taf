@@ -1,4 +1,4 @@
-package endava.pages.swaglabs;
+package endava.ui.pages.swaglabs;
 
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;

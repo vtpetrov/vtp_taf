@@ -1,6 +1,7 @@
-package endava.pages.swaglabs;
+package endava.ui.pages.swaglabs;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -14,11 +15,13 @@ import static ui.Browser.getUrl;
 /**
  * Page object to represent <a href="https://www.saucedemo.com/checkout-step-one.html">www.saucedemo.com/checkout-step-one.html</a> page
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class CheckOutPage extends HeaderPage {
 
     @FindBy(id = "first-name")
     private WebElement firstNameInput;
+
 
     @FindBy(id = "last-name")
     private WebElement lastNameInput;

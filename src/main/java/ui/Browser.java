@@ -2,7 +2,9 @@ package ui;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.PropertyUtils;
@@ -13,6 +15,10 @@ public class Browser {
     private static final Logger logger = LoggerFactory.getLogger(Browser.class.getSimpleName());
     public static final String BROWSER_NAME_PROP_KEY = "browser.name";
     public static WebDriver drv;
+
+    public Browser() {
+        logger.info("Invoking [Browser] default constructor....");
+    }
 
     /**
      * Get System property 'browser.name' and use it to initialize the respective browser.
@@ -37,8 +43,19 @@ public class Browser {
         logger.info("Initializing browser '{}'", browserName);
 
         switch (browserName.toLowerCase()) {
-            case "chrome" -> drv = new ChromeDriver();
-            case "firefox" -> drv = new FirefoxDriver();
+            case "chrome" -> {
+                // supply browser options:
+                ChromeOptions chromeOptions = new ChromeOptions();
+                // TODO: see how we can set resolution/size
+                drv = new ChromeDriver();
+
+            }
+            case "firefox" -> {
+                FirefoxOptions firefoxOptions = new FirefoxOptions();
+                // TODO: see how we can set resolution/size
+                drv = new FirefoxDriver();
+            }
+
             default -> throw new Error("Unknown browser name '" + browserName + "'. Valid values are ['chrome', 'firefox']");
         }
 

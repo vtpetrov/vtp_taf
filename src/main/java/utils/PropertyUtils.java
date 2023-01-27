@@ -14,6 +14,9 @@ public class PropertyUtils {
     public static final String CONFIGS = "configs";
     private static final String configsPath = ResourceFileFinder.getBasePath() + CONFIGS;
 
+    public PropertyUtils() {
+        logger.info("Invoking [PropertyUtils] default constructor....");
+    }
 
     public static Properties getAllProperties() {
         return props;

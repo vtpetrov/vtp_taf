@@ -1,7 +1,7 @@
-package endava.pages.swaglabs;
+package endava.ui.pages.swaglabs;
 
 import base.BasePageObject;
-import endava.pages.models.HamburgerMenu;
+import endava.ui.pages.models.HamburgerMenu;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;

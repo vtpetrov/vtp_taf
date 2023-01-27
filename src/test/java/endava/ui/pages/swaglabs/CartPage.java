@@ -1,7 +1,8 @@
-package endava.pages.swaglabs;
+package endava.ui.pages.swaglabs;
 
-import endava.pages.models.CartProduct;
+import endava.ui.pages.models.CartProduct;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -21,6 +22,7 @@ import static ui.Browser.getUrl;
 /**
  * Page object to represent <a href="https://www.saucedemo.com/cart.html">www.saucedemo.com/cart.html</a> page
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class CartPage extends HeaderPage {
     @FindBy(id = "cart_contents_container")

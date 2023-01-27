@@ -12,7 +12,8 @@ public class BasePageObject {
     private static final Logger logger = LoggerFactory.getLogger(BasePageObject.class.getSimpleName());
 
     protected BasePageObject() {
-        PageFactory.initElements(new AjaxElementLocatorFactory(drv, 5), this);
+        logger.info("Invoking [BasePageObject] default constructor....");
+        PageFactory.initElements(new AjaxElementLocatorFactory(drv, 4), this);
     }
 
 }

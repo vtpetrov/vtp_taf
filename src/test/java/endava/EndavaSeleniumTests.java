@@ -1,10 +1,10 @@
 package endava;
 
-import base.BaseTestStep;
-import endava.pages.models.CartProduct;
-import endava.pages.models.HamburgerMenu;
-import endava.pages.models.InventoryProduct;
-import endava.pages.swaglabs.*;
+import base.UiBaseTestStep;
+import endava.ui.pages.models.CartProduct;
+import endava.ui.pages.models.HamburgerMenu;
+import endava.ui.pages.models.InventoryProduct;
+import endava.ui.pages.swaglabs.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
@@ -19,10 +19,11 @@ import java.util.List;
 import static ui.Browser.goTo;
 
 /**
- * Use the following public website for your automation task:
+ * Task description -> <a href="https://github.com/Endava-Sofia/endava-testing-challenge/blob/master/Selenium_UI_Task.md">link</a>
+ * <br/> Use the following public website for your automation task:
  * <br/> <a href="https://www.saucedemo.com/">https://www.saucedemo.com/</a>
  */
-public class EndavaSeleniumTests extends BaseTestStep {
+public class EndavaSeleniumTests extends UiBaseTestStep {
 
     private static final Logger logger = LoggerFactory.getLogger(EndavaSeleniumTests.class.getSimpleName());
     private static final String UI_BASE_URL_PROP_KEY = "ui_base_url";
@@ -40,7 +41,7 @@ public class EndavaSeleniumTests extends BaseTestStep {
 
     @Test
     @Tags({@Tag("endava"), @Tag("ui"), @Tag("s1")})
-    public void scenarioOne() {
+    public void uiScenarioOne() {
         String scenarioDescr = """
                 Scenario 1
                     1. Log in with the standard user
@@ -173,7 +174,7 @@ public class EndavaSeleniumTests extends BaseTestStep {
 
     @Test
     @Tags({@Tag("endava"), @Tag("ui"), @Tag("s2")})
-    public void scenarioTwo() {
+    public void uiScenarioTwo() {
         String scenarioDescr = """
                 Scenario 2
                     1. Log in with the standard user
