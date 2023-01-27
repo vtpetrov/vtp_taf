@@ -4,7 +4,9 @@ import api.rest.Request;
 import api.rest.Response;
 import api.rest.RestClient;
 import base.ApiBaseTestStep;
-import endava.api.models.User;
+import base.SchemaValidationSteps;
+import endava.api.models.UserCreate;
+import endava.api.models.UserGet;
 import endava.api.models.UserSingle;
 import endava.api.models.UsersList;
 import org.junit.jupiter.api.*;
@@ -47,11 +49,12 @@ public class EndavaRestTests extends ApiBaseTestStep {
 
     private static final Logger logger = LoggerFactory.getLogger(EndavaRestTests.class.getSimpleName());
     public static final String CONTENT_TYPE_JSON = "application/json";
-    private User extractedUser;
+    private UserGet extractedUser;
     private final Request currentRequest = new Request();
     private final UsersList grossExpectedUsersPage;
 
     public static final int RESPONSE_STATUS_200 = 200;
+    public static final int RESPONSE_STATUS_201 = 201;
     public static final int RESPONSE_STATUS_404 = 404;
     public static final String NON_EXISTING_USER_RESPONSE = "{}";
 
@@ -99,13 +102,13 @@ public class EndavaRestTests extends ApiBaseTestStep {
         //*     Extract single user details (Id, Email)
         logger.info("*     Extract single user details (Id, Email), for user 3, Emma Wong");
 //      user 3, Emma Wong:
-        List<User> extractedUsersPage1 = actualUsersPage1.getData();
+        List<UserGet> extractedUsersPage1 = actualUsersPage1.getData();
         extractedUser = Misc.getElementSafe(extractedUsersPage1.stream().filter(u1 -> u1.getId() == 3).collect(Collectors.toList()),
                 0);
 
 //(Optional) Extract all users, sort them by First Name alphabetically. Print sorted collection.
         logger.info("(Optional) Extract all users, sort them by First Name alphabetically. Print sorted collection.");
-        extractedUsersPage1.sort(new User.ComparatorByFirstName());
+        extractedUsersPage1.sort(new UserGet.ComparatorByFirstName());
         logger.info("Sorted users by First name: {}", Misc.prettyPrintList(extractedUsersPage1));
 
     }
@@ -125,7 +128,7 @@ public class EndavaRestTests extends ApiBaseTestStep {
         logger.info("2.Get extracted user details via GET /api/users/{USER_ID}");
         currentRequest.clear();
         // get the id of the extracted user from sc.1 (or if it was not executed, set 3 directly)
-        currentRequest.setPath("/users/" + Optional.ofNullable(extractedUser).map(User::getId).orElse(3));
+        currentRequest.setPath("/users/" + Optional.ofNullable(extractedUser).map(UserGet::getId).orElse(3));
         Response user3Response = RestClient.get(currentRequest);
 //                *      Execute one or many JSON Response Assertions
         logger.info("*      Execute one or many JSON Response Assertions");
@@ -134,10 +137,10 @@ public class EndavaRestTests extends ApiBaseTestStep {
                 , "Actual response status code doesn't match expected!");
 
         UserSingle actualSingleUser3 = JsonUtils.getResourceFromResponse(user3Response, UserSingle.class);
-        User actualUser3 = actualSingleUser3.getData();
-        User expectedUser3 = Optional.ofNullable(
+        UserGet actualUser3 = actualSingleUser3.getData();
+        UserGet expectedUser3 = Optional.ofNullable(
                 Misc.getElementSafe(grossExpectedUsersPage.getData().stream().filter(u -> u.getId() == 3).collect(Collectors.toList()),
-                        0)).orElse(new User());
+                        0)).orElse(new UserGet());
         //Compare user 3 from expected response to user 3 from actual single response:
         assertionHelper.assertEqualsComplexObjects("Actual single User 3 data doesn't match the one from expected json"
                 , expectedUser3
@@ -184,9 +187,28 @@ public class EndavaRestTests extends ApiBaseTestStep {
         currentRequest.setPath("/users");
 
         logger.info("Creating user via POST /api/users");
-        String postUserBody = User.generateUserCreateBody(faker.name().name(), faker.commerce().department());
+        String userName = faker.name().name();
+        String userJob = faker.commerce().department();
+        String postUserBody = UserCreate.generateUserCreateBody(userName, userJob);
+        UserCreate expectedUser = JsonUtils.getResourceFromString(postUserBody, UserCreate.class);
         currentRequest.setBody(postUserBody);
         Response createUserResponse = RestClient.post(currentRequest);
+        UserCreate actualUser = JsonUtils.getResourceFromResponse(createUserResponse, UserCreate.class);
+
+// *      Execute one or many JSON Response Assertions
+        logger.info("*      Execute one or many JSON Response Assertions");
+        assertionHelper.assertEquals("Actual response status code doesn't match expected!"
+                , RESPONSE_STATUS_201, createUserResponse.getStatusCode());
+        // validate response schema:
+        SchemaValidationSteps.validateResponseAgainstJsonSchema(createUserResponse.getBody()
+        , "/endava/schemas/createUser_schema.json");
+
+        String errMsg = "Actual value doesn't match expected!";
+        logger.info("Expected user: {}", expectedUser);
+        logger.info("Actual   user: {}", actualUser);
+        assertionHelper.assertEquals(errMsg, userName, actualUser.getName());
+        assertionHelper.assertEquals(errMsg, userJob, actualUser.getJob());
+
     }
 
 }

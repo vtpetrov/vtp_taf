@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class UserSingle {
 
-    User data;
+    UserGet data;
     Support support;
 //    String sampleResponse =
 //            """

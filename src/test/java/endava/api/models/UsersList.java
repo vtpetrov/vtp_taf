@@ -14,7 +14,7 @@ public class UsersList {
     int total;
     @SerializedName("total_pages")
     int totalPages;
-    List<User> data;
+    List<UserGet> data;
     Support support;
 //    String sampleResponse =
 //            """
