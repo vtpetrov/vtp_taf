@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static io.netty.util.internal.StringUtil.EMPTY_STRING;
+
 /**
  * Task description -> <a href="https://github.com/Endava-Sofia/endava-testing-challenge/blob/master/REST_API_Task.md">link</a>
  * <br/> Use <a href="https://reqres.in/">the following</a> public REST API to complete scenario steps.
@@ -59,7 +61,7 @@ public class EndavaRestTests extends ApiBaseTestStep {
     private static final int RESPONSE_STATUS_201 = 201;
     private static final int RESPONSE_STATUS_204 = 204;
     private static final int RESPONSE_STATUS_404 = 404;
-    private static final String EMPTY_RESPONSE_BODY = "{}";
+    private static final String EMPTY_JSON_RESPONSE_BODY = "{}";
 
     public EndavaRestTests() {
         logger.info("Invoking [EndavaRestTests] default constructor....");
@@ -173,7 +175,7 @@ public class EndavaRestTests extends ApiBaseTestStep {
         logger.info("Execute one or many Assertions");
         Assertions.assertEquals(RESPONSE_STATUS_404, userNotFoundResponse.getStatusCode()
                 , "Actual response status code doesn't match expected!");
-        Assertions.assertEquals(EMPTY_RESPONSE_BODY, userNotFoundResponse.getBody(),
+        Assertions.assertEquals(EMPTY_JSON_RESPONSE_BODY, userNotFoundResponse.getBody(),
                 "Actual response body doesn't match expected");
     }
 
@@ -242,7 +244,7 @@ public class EndavaRestTests extends ApiBaseTestStep {
         assertionHelper.assertEquals("Actual response status code doesn't match expected!"
                 , RESPONSE_STATUS_204, deleteUserResponse.getStatusCode());
         assertionHelper.assertEquals("Actual response body doesn't match expected"
-                , EMPTY_RESPONSE_BODY, deleteUserResponse.getBody());
+                , EMPTY_STRING, deleteUserResponse.getBody());
 
 
     }

@@ -12,6 +12,7 @@
         <maven.compiler.source>19</maven.compiler.source>
         <maven.compiler.target>19</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.lombok.version>1.18.16</project.lombok.version>
     </properties>
     <dependencies>
         <dependency>
@@ -66,7 +67,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.16</version>
+            <version>${project.lombok.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.java-json-tools</groupId>
@@ -110,9 +111,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
     </dependencies>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -124,5 +123,22 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${project.lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
