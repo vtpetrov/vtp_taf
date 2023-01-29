@@ -29,8 +29,19 @@ public class CommonBaseTestStep {
     public static void initCommonBaseTest() {
         logger.info("Invoking [CommonBaseTestStep] @BeforeAll method....");
         logger.info("Loading ALL properties and putting them in both System and testProps");
-        PropertyUtils.loadAllConfigs();
+        PropertyUtils.loadMavenPropertiesDefinedInPom();
+//        Tests will be executed on multiple environments (dev, testing, staging, etc..), add necessary configurations.
+        // either load specific or common configs, based on the 'env' property:
+        String env = PropertyUtils.getProperty("env", "n/a");
+        if("n/a".equals(env)){
+            // load common properties:
+            PropertyUtils.loadCommonConfigs();
+        } else {
+            PropertyUtils.loadSpecificConfig(env);
+        }
+
         PropertyUtils.copyPropsIntoSystemAndViceVersa();
+
         testProps = PropertyUtils.getAllProperties();
         share = new SharedState();
 

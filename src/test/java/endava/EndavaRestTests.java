@@ -245,8 +245,6 @@ public class EndavaRestTests extends ApiBaseTestStep {
                 , RESPONSE_STATUS_204, deleteUserResponse.getStatusCode());
         assertionHelper.assertEquals("Actual response body doesn't match expected"
                 , EMPTY_STRING, deleteUserResponse.getBody());
-
-
     }
 
 }

@@ -5,14 +5,18 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
+
+import static utils.ResourceFileFinder.fs;
+import static utils.ResourceFileFinder.getBaseTestResourcePath;
 
 public class PropertyUtils {
     private static final Logger logger = LoggerFactory.getLogger(PropertyUtils.class.getSimpleName());
     private static final Properties props = new Properties();
-    public static final String CONFIGS = "configs";
-    private static final String configsPath = ResourceFileFinder.getBasePath() + CONFIGS;
+    private static final String COMMON_CONFIGS_PATH = getBaseTestResourcePath() + "configs" + fs + "common";
+    private static final String SPECIFIC_CONFIGS_PATH = getBaseTestResourcePath() + "configs" + fs + "specific";
 
     public PropertyUtils() {
         logger.info("Invoking [PropertyUtils] default constructor....");
@@ -27,12 +31,36 @@ public class PropertyUtils {
      * <div/>
      * <br/> All loaded properties are then available through the global var {@link utils.PropertyUtils#props}
      */
-    public static void loadAllConfigs() {
-        List<String> allConfigFilePaths = ResourceFileFinder.getListOfFilePaths(configsPath);
+    public static void loadCommonConfigs() {
+        logger.info("Loading common configs {}", COMMON_CONFIGS_PATH);
+        loadConigsFromPath(COMMON_CONFIGS_PATH, null);
+    }
+
+    /**
+     * Load the file only if file name contains the value passed as the 'env' param.
+     *
+     * @param env the value which need to be in the file name to load it
+     */
+    public static void loadSpecificConfig(String env) {
+        logger.info("Loading specific config [{}] '{}'", env, SPECIFIC_CONFIGS_PATH);
+        loadConigsFromPath(SPECIFIC_CONFIGS_PATH, env);
+    }
+
+    /**
+     * Load configs from specific target path whose filename contains passed param
+     *
+     * @param path              the target path to look at
+     * @param fileNameToContain string that needs to be in the file name if we want to load it.
+     *                          <br/> pass <b>null</b> if want to load all files located in targed dir.
+     */
+    private static void loadConigsFromPath(String path, String fileNameToContain) {
+        List<String> allConfigFilePaths = ResourceFileFinder.getListOfFilePaths(path, fileNameToContain);
         for (String configFilePath : allConfigFilePaths) {
             loadPropertyFile(configFilePath);
         }
+
     }
+
 
     public static void copyPropsIntoSystemAndViceVersa() {
         Properties systemProps = System.getProperties();
@@ -42,6 +70,7 @@ public class PropertyUtils {
     }
 
     public static void loadPropertyFile(final String propertyFilePath) {
+        logger.info("Loading config file {}", propertyFilePath);
         try (FileInputStream fis = new FileInputStream(propertyFilePath)) {
             props.load(fis);
         } catch (IOException e) {
@@ -49,8 +78,20 @@ public class PropertyUtils {
         }
     }
 
+    public static void loadMavenPropertiesDefinedInPom() {
+        InputStream is = PropertyUtils.class.getClassLoader()
+                .getResourceAsStream("properties-from-pom.properties");
+
+        try {
+            props.load(is);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Get a specific property from the currently loaded properties
+     *
      * @param propertyKey the key of the property to look for
      * @return Property value if such key is found. Empty string ("") otherwise.
      */
@@ -62,7 +103,8 @@ public class PropertyUtils {
 
     /**
      * Check for such a property and if not found return default value
-     * @param propertyKey the key of the property to search for
+     *
+     * @param propertyKey  the key of the property to search for
      * @param defaultValue the default value to be returned if property not found
      * @return the found prop value or default
      */

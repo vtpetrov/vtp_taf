@@ -12,7 +12,7 @@ public class ApiBaseTestStep extends CommonBaseTestStep{
     public String apiBaseUrl;
     public ApiBaseTestStep() {
         logger.info("Invoking [ApiBaseTestStep] default constructor....");
-        apiBaseUrl = testProps.getProperty("api_base_url", "DefaultBaseUri");
+        apiBaseUrl = testProps.getProperty("api.base.url", "DefaultBaseUri");
         RestClient.setBaseURI(apiBaseUrl);
     }
 

@@ -19,35 +19,44 @@ public class ResourceFileFinder {
 
     public static final String fs = File.separator;
     private static final String workingDir = System.getProperty("user.dir");
-//    private static final String basePath = getBasePath();
 
     public static String findAResourceFilePathFromFileName(final String fileName) {
 
-        List<String> listOfFilePaths = getListOfFilePaths(getBasePath());
+        List<String> listOfFilePaths = getListOfFilePaths(getBaseTestResourcePath(), fileName);
 
-        for (String filePath : listOfFilePaths) {
-            if (filePath.endsWith(fs + fileName)) {
-                logger.debug("File path found: " + filePath);
-                return filePath;
-            }
+        if (listOfFilePaths.size() == 1) {
+            logger.debug("File path found: " + listOfFilePaths.get(0));
+            return listOfFilePaths.get(0);
+        } else {
+            logger.error("0 or more than 1 file found for filename '{}' in directory '{}'"
+                    , fileName, getBaseTestResourcePath());
+            return null;
         }
-        logger.error("No file found for filename: '" + fileName + "' in directory " + getBasePath());
-        return null;
     }
 
     /**
-     * Find all files located in given target directory
+     * Find files located in given target directory
      *
-     * @return List of all file paths
+     * @param targetDirectory   The target directory to look at
+     * @param fileNameToContain The text that need to be contained in the file path (including file name)
+     *                          <br/> Pass <b>null</b> if we don't want to use it and want to load ALL files from target dir.
+     * @return List of all file paths that match the search
      */
-    public static List<String> getListOfFilePaths(String targetDirectory) {
+    public static List<String> getListOfFilePaths(String targetDirectory, String fileNameToContain) {
 
         List<String> listOfFilePaths = new ArrayList<>();
 
         try (Stream<Path> walk = Files.walk(Paths.get(targetDirectory))) {
 
-            listOfFilePaths = walk.filter(Files::isRegularFile)
-                    .map(Path::toString).collect(Collectors.toList());
+            Stream<String> tempStream = walk.filter(Files::isRegularFile).map(Path::toString);
+            Stream<String> finalStream;
+            if (fileNameToContain != null) {
+                finalStream = tempStream.filter(p -> p.contains(fileNameToContain));
+            } else {
+                finalStream = tempStream;
+            }
+
+            listOfFilePaths = finalStream.collect(Collectors.toList());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -59,7 +68,7 @@ public class ResourceFileFinder {
     /**
      * @return The base path to <i>/src/test/resources</i> with platform specific file path separators
      */
-    public static String getBasePath() {
+    public static String getBaseTestResourcePath() {
         String pathBuilder = workingDir + fs + "src" +
                 fs + "test" +
                 fs + "resources" + fs;

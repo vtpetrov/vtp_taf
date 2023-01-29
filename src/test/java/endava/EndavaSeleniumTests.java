@@ -26,11 +26,11 @@ import static ui.Browser.goTo;
 public class EndavaSeleniumTests extends UiBaseTestStep {
 
     private static final Logger logger = LoggerFactory.getLogger(EndavaSeleniumTests.class.getSimpleName());
-    private static final String UI_BASE_URL_PROP_KEY = "ui_base_url";
+    private static final String UI_BASE_URL_PROP_KEY = "ui.base.url";
     protected static String UI_BASE_URL;
-    private static final String STD_USER_PROP_KEY = "saucedemo_std_user";
+    private static final String STD_USER_PROP_KEY = "saucedemo.std.user";
     protected static String STD_USER;
-    private static final String STD_PASS_PROP_KEY = "saucedemo_pass";
+    private static final String STD_PASS_PROP_KEY = "saucedemo.pass";
     protected static String STD_PASS;
 
     public EndavaSeleniumTests() {
@@ -166,7 +166,6 @@ public class EndavaSeleniumTests extends UiBaseTestStep {
 
         // assert we are at login page now:
         Assertions.assertTrue(new LoginPage().isAt()); // assert if login page is opened
-
 
         logger.info("Scenario 1 End!");
     }

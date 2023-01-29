@@ -63,7 +63,7 @@ public class RestClient {
                 .headers(request.getHeaders())
                 .queryParams(request.getQueryParams())
                 .pathParams(request.getPathParams())
-//                .log().all()
+                .log().all()
                 .get(request.getVersion() + request.getPath())
                 .then()
 //                .log().all()
