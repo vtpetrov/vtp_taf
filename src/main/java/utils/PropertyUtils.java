@@ -32,8 +32,8 @@ public class PropertyUtils {
      * <br/> All loaded properties are then available through the global var {@link utils.PropertyUtils#props}
      */
     public static void loadCommonConfigs() {
-        logger.info("Loading common configs {}", COMMON_CONFIGS_PATH);
-        loadConigsFromPath(COMMON_CONFIGS_PATH, null);
+        logger.info("Loading common configs {}...", COMMON_CONFIGS_PATH);
+        loadConfigsFromPath(COMMON_CONFIGS_PATH, null);
     }
 
     /**
@@ -42,8 +42,8 @@ public class PropertyUtils {
      * @param env the value which need to be in the file name to load it
      */
     public static void loadSpecificConfig(String env) {
-        logger.info("Loading specific config [{}] '{}'", env, SPECIFIC_CONFIGS_PATH);
-        loadConigsFromPath(SPECIFIC_CONFIGS_PATH, env);
+        logger.info("Loading specific config [{}] '{}'...", env, SPECIFIC_CONFIGS_PATH);
+        loadConfigsFromPath(SPECIFIC_CONFIGS_PATH, env);
     }
 
     /**
@@ -53,12 +53,17 @@ public class PropertyUtils {
      * @param fileNameToContain string that needs to be in the file name if we want to load it.
      *                          <br/> pass <b>null</b> if want to load all files located in targed dir.
      */
-    private static void loadConigsFromPath(String path, String fileNameToContain) {
+    private static void loadConfigsFromPath(String path, String fileNameToContain) {
         List<String> allConfigFilePaths = ResourceFileFinder.getListOfFilePaths(path, fileNameToContain);
         for (String configFilePath : allConfigFilePaths) {
             loadPropertyFile(configFilePath);
         }
 
+        if (allConfigFilePaths.isEmpty()) {
+            logger.warn("Configs for [{}] doesn't exist. Nothing is loaded!", fileNameToContain);
+        } else {
+            logger.info("Success!!");
+        }
     }
 
 
