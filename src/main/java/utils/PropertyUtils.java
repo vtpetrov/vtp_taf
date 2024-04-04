@@ -9,14 +9,16 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
 
-import static utils.ResourceFileFinder.fs;
+import static java.nio.file.Path.of;
 import static utils.ResourceFileFinder.getBaseTestResourcePath;
 
 public class PropertyUtils {
     private static final Logger logger = LoggerFactory.getLogger(PropertyUtils.class.getSimpleName());
     private static final Properties props = new Properties();
-    private static final String COMMON_CONFIGS_PATH = getBaseTestResourcePath() + "configs" + fs + "common";
-    private static final String SPECIFIC_CONFIGS_PATH = getBaseTestResourcePath() + "configs" + fs + "specific";
+    private static final String COMMON_CONFIGS_PATH =
+            of(getBaseTestResourcePath() ,"configs","common").toString();
+    private static final String SPECIFIC_CONFIGS_PATH =
+            of(getBaseTestResourcePath() ,"configs","specific").toString();
 
     public PropertyUtils() {
         logger.info("Invoking [PropertyUtils] default constructor....");

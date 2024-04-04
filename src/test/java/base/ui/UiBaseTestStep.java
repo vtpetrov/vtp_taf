@@ -1,5 +1,6 @@
-package base;
+package base.ui;
 
+import base.CommonBaseTestStep;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;

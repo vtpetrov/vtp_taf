@@ -1,12 +1,13 @@
-package base;
+package base.api;
 
 import api.rest.RestClient;
+import base.CommonBaseTestStep;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ApiBaseTestStep extends CommonBaseTestStep{
+public class ApiBaseTestStep extends CommonBaseTestStep {
 
     private static final Logger logger = LoggerFactory.getLogger(ApiBaseTestStep.class.getSimpleName());
     public String apiBaseUrl;

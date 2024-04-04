@@ -69,10 +69,11 @@ public class ResourceFileFinder {
      * @return The base path to <i>/src/test/resources</i> with platform specific file path separators
      */
     public static String getBaseTestResourcePath() {
-        String pathBuilder = workingDir + fs + "src" +
-                fs + "test" +
-                fs + "resources" + fs;
-        return pathBuilder;
+        return Path.of(workingDir, "src", "test", "resources").toString();
+//        String pathBuilder = workingDir + fs + "src" +
+//                fs + "test" +
+//                fs + "resources" + fs;
+//        return pathBuilder;
     }
 
 }

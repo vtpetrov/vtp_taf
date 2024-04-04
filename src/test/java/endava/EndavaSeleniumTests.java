@@ -1,6 +1,6 @@
 package endava;
 
-import base.UiBaseTestStep;
+import base.ui.UiBaseTestStep;
 import endava.ui.pages.models.CartProduct;
 import endava.ui.pages.models.HamburgerMenu;
 import endava.ui.pages.models.InventoryProduct;

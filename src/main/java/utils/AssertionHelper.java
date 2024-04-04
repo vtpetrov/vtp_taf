@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class AssertionHelper {
@@ -21,7 +22,7 @@ public class AssertionHelper {
      * @return the obtained value if found. Default value= FALSE.
      */
     public static Boolean isSoftAssert() {
-        //TODO: implement globa flag and per test config for soft assert. For now return false.
+        //TODO: implement global flag and per test config for soft assert. For now return false.
         Boolean scenarioSoftAssert = false;
         return scenarioSoftAssert;
     }
@@ -91,7 +92,7 @@ public class AssertionHelper {
     public void assertNotNull(final String errMessage, final Object actualValue) {
 
         try {
-            org.assertj.core.api.Assertions.assertThat(actualValue).as(errMessage).isNotNull();
+            assertThat(actualValue).as(errMessage).isNotNull();
         } catch (AssertionError e) {
             if (isSoftAssert()) {
                 logger.error(e.getMessage());
@@ -109,7 +110,7 @@ public class AssertionHelper {
      */
     public void assertNull(final String errMessage, final Object actualValue) {
         try {
-            org.assertj.core.api.Assertions.assertThat(actualValue).as(errMessage).isNull();
+            assertThat(actualValue).as(errMessage).isNull();
         } catch (AssertionError e) {
             if (isSoftAssert()) {
                 logger.error(e.getMessage());
@@ -149,7 +150,7 @@ public class AssertionHelper {
     public void assertNumberOfElements(final String errMsg, final Iterable<?> collectionToCheck, final int expectedCount) {
         try {
             // Assertj
-            org.assertj.core.api.Assertions.assertThat(collectionToCheck).as(errMsg).hasSize(expectedCount);
+            assertThat(collectionToCheck).as(errMsg).hasSize(expectedCount);
         } catch (AssertionError error) {
             if (isSoftAssert()) {
                 logger.error(error.getMessage());
@@ -169,7 +170,7 @@ public class AssertionHelper {
      */
     public <T> void assertListOfSimpleObjectsEquals(final String errMsg, final Collection<T> expectedList, final Collection<T> actualList) {
         try {
-            org.assertj.core.api.Assertions.assertThat(actualList).as(errMsg)
+            assertThat(actualList).as(errMsg)
                     .containsExactlyInAnyOrderElementsOf(expectedList);
         } catch (AssertionError e) {
             if (isSoftAssert()) {
@@ -182,7 +183,7 @@ public class AssertionHelper {
 
     public <T> void assertListOfComplexObjectsEquals(final String errMsg, final Collection<T> expectedList, final Collection<T> actualList) {
         try {
-            org.assertj.core.api.Assertions.assertThat(actualList).as(errMsg).usingRecursiveFieldByFieldElementComparator()
+            assertThat(actualList).as(errMsg).usingRecursiveFieldByFieldElementComparator()
                     .isEqualTo(expectedList);
         } catch (AssertionError e) {
             if (isSoftAssert()) {
@@ -201,7 +202,7 @@ public class AssertionHelper {
      */
     public void assertEmptyList(final String errMessage, final List actualValue) {
         try {
-            org.assertj.core.api.Assertions.assertThat(actualValue).as(errMessage).isEmpty();
+            assertThat(actualValue).as(errMessage).isEmpty();
         } catch (AssertionError e) {
             if (isSoftAssert()) {
                 logger.error(e.getMessage());
@@ -231,12 +232,12 @@ public class AssertionHelper {
 
         try {
             if (ignoreExpectedNulls) {
-                org.assertj.core.api.Assertions.assertThat(actualObject).as(errMsg)
+                assertThat(actualObject).as(errMsg)
                         .usingRecursiveComparison()
                         .ignoringExpectedNullFields()
                         .isEqualTo(expectedObject);
             } else {
-                org.assertj.core.api.Assertions.assertThat(actualObject).as(errMsg)
+                assertThat(actualObject).as(errMsg)
                         .usingRecursiveComparison()
                         .isEqualTo(expectedObject);
             }
@@ -275,7 +276,7 @@ public class AssertionHelper {
                 listOfFieldsWithRegex.add("^(?i).*" + field + ".*?$");
             }
             String[] strArray = listOfFieldsWithRegex.toArray(new String[0]);
-            org.assertj.core.api.Assertions.assertThat(actualObject).as(errMsg)
+            assertThat(actualObject).as(errMsg)
                     .usingRecursiveComparison().ignoringFieldsMatchingRegexes(strArray)
                     .isEqualTo(expectedObject);
         } catch (AssertionError e) {
@@ -298,7 +299,7 @@ public class AssertionHelper {
      */
     public <T> void assertListOfSimpleObjectsContainsExpectedList(final String errMsg, final Collection<T> expectedList, final Collection<T> actualList) {
         try {
-            org.assertj.core.api.Assertions.assertThat(actualList).as(errMsg)
+            assertThat(actualList).as(errMsg)
                     .containsAll(expectedList);
         } catch (AssertionError e) {
             if (isSoftAssert()) {
